@@ -2,8 +2,10 @@
   <div class="centered">
     <p><strong> Current Deck ID: {{currentDeck}}</strong></p>
     <div class="currentHandDiv"> 
-      <div v-for="(card, index) in currentCards"  >
-          <img :key="`$index`" v-model="selected" v-on:click="selectCard(index)" v-if="currentCards.length > 0" v-bind:src="card.cards[0].image"     />
+      <div v-for="(card, index) in currentCards">
+        <div v-on:click="card.clicked = !card.clicked" >
+          <img :key="`$index`" v-model="selected" v-on:click="selectCard(index)" v-bind:class="[{'active': card.clicked}]" v-if="currentCards.length > 0" v-bind:src="card.cards[0].image"     />
+        </div>
       </div>
     </div>
     <div>
@@ -34,7 +36,7 @@ export default {
   },
   created() {
     // 
-    axios.get(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=20`)
+    axios.get(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=5`)
     .then(response => {
       console.log(response);
       this.currentDeck = response.data.deck_id;
@@ -53,6 +55,7 @@ export default {
       axios.get(`https://deckofcardsapi.com/api/deck/${this.currentDeck}/draw/?count=1`)
         .then(response => {
           this.currentCards.push(response.data);
+          this.$set(this.currentCards[this.currentCards.length -1], 'clicked' , false)
         })
     },
     selectCard: function(index){
@@ -60,7 +63,6 @@ export default {
       var currentCardIndex = index.toString();
       //if every value in the array doesn't equal the index, return true
       var duplicationCheck = this.selected.every(x => {
-        console.log(x);
         return x !== currentCardIndex;
       })
 
@@ -89,6 +91,19 @@ export default {
         this.currentCards = cardsInHand;
       }
       this.selected = [];
+      this.checkValue();
+    },
+    checkValue: function(){
+      console.log('hello');
+      var hand = [];
+      for(let i = 0; i < this.currentCards.length; i++){
+        console.log(this.currentCards[i].cards[0].value)
+        hand.push(this.currentCards[i].cards[0].value);
+      }
+      //check for two pair
+    },
+    findDuplicates: function(arr){
+
     },
     clearHand: function(){
       //remove all cards from the current hand
@@ -128,6 +143,14 @@ a {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.active {
+  background-color: red;
+}
+.batman {
+  padding: 20px;
+  background-color: black;
 }
 </style>
 
