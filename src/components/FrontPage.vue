@@ -9,9 +9,11 @@
       </div>
     </div>
     <div>
-      <button v-on:click="newCard"> Draw Card </button>
-      <button v-on:click="clearHand"> Clear Hand </button>
-      <button v-on:click="swapCards"> Swap Cards </button>
+    <v-app>
+      <v-btn color="success" v-on:click="newCard"> Draw Card </v-btn>
+      <v-btn color="error" v-on:click="clearHand"> Clear Hand </v-btn>
+      <v-btn color="primary" v-on:click="swapCards"> Swap Cards </v-btn>
+    </v-app>
     </div>
   </div>
 
